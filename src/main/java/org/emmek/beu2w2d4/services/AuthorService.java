@@ -1,5 +1,7 @@
 package org.emmek.beu2w2d4.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.emmek.beu2w2d4.entities.Author;
 import org.emmek.beu2w2d4.exceptions.BadRequestException;
 import org.emmek.beu2w2d4.exceptions.NotFoundException;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 public class AuthorService {
     @Autowired
     AuthorRepository authorRepository;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Author save(AuthorPostDTO author) throws IOException {
         authorRepository.findByEmail(author.email()).ifPresent(a -> {
@@ -62,4 +67,11 @@ public class AuthorService {
         return authorRepository.save(a);
     }
 
+    public String uploadPicture(int id, MultipartFile file) throws IOException {
+        Author author = authorRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        author.setAvatar(url);
+        authorRepository.save(author);
+        return url;
+    }
 }
