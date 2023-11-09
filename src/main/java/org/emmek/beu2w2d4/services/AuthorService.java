@@ -2,6 +2,7 @@ package org.emmek.beu2w2d4.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.emmek.beu2w2d4.config.EmailSender;
 import org.emmek.beu2w2d4.entities.Author;
 import org.emmek.beu2w2d4.exceptions.BadRequestException;
 import org.emmek.beu2w2d4.exceptions.NotFoundException;
@@ -27,6 +28,9 @@ public class AuthorService {
     @Autowired
     private Cloudinary cloudinary;
 
+    @Autowired
+    private EmailSender emailSender;
+
     public Author save(AuthorPostDTO author) throws IOException {
         authorRepository.findByEmail(author.email()).ifPresent(a -> {
             throw new BadRequestException("Author with email " + a.getEmail() + " already exists");
@@ -40,7 +44,7 @@ public class AuthorService {
         LocalDate date = LocalDate.parse(author.birthDate(), formatter);
         newAuthor.setBirthDate(date);
         Author savedAuthor = authorRepository.save(newAuthor);
-//        emailSender.sendRegistrationEmail(author.email());
+        emailSender.sendRegistrationEmail(author.email());
         return savedAuthor;
     }
 
