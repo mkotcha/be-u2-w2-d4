@@ -1,0 +1,9 @@
+2023-11-09T10:55:32.143+01:00  INFO 381483 --- [restartedMain] org.emmek.beu2w2d4.U5d9Application       : Starting U5d9Application using Java 20.0.2 with PID 381483 (/home/kutch/IdeaProjects/be-u2-w2-d4/target/classes started by kutch in /home/kutch/IdeaProjects/be-u2-w2-d4)
+2023-11-09T10:55:32.145+01:00 DEBUG 381483 --- [restartedMain] org.emmek.beu2w2d4.U5d9Application       : Running with Spring Boot v3.1.5, Spring v6.0.13
+2023-11-09T10:55:32.147+01:00  INFO 381483 --- [restartedMain] org.emmek.beu2w2d4.U5d9Application       : The following 1 profile is active: "dev"
+2023-11-09T10:55:34.593+01:00  INFO 381483 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-09T10:55:34.690+01:00  INFO 381483 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.13.Final
+2023-11-09T10:55:34.693+01:00  INFO 381483 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-11-09T10:55:36.300+01:00  INFO 381483 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2023-11-09T10:55:36.820+01:00  WARN 381483 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-09T10:55:37.307+01:00  INFO 381483 --- [restartedMain] org.emmek.beu2w2d4.U5d9Application       : Started U5d9Application in 5.793 seconds (process running for 6.539)
