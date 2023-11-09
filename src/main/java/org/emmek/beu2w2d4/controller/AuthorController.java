@@ -1,12 +1,17 @@
 package org.emmek.beu2w2d4.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.emmek.beu2w2d4.entities.Author;
+import org.emmek.beu2w2d4.exceptions.BadRequestException;
+import org.emmek.beu2w2d4.payloads.author.AuthorPostDTO;
 import org.emmek.beu2w2d4.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/authors")
@@ -25,9 +30,16 @@ public class AuthorController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    @JsonFormat(pattern = "dd/MM/YYYY")
-    public Author postAuthors(@RequestBody Author author) {
-        return authorService.save(author);
+    public Author postAuthors(@RequestBody @Validated AuthorPostDTO author, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors());
+        } else {
+            try {
+                return authorService.save(author);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @GetMapping("/{id}")

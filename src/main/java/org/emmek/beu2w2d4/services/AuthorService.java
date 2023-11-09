@@ -3,6 +3,7 @@ package org.emmek.beu2w2d4.services;
 import org.emmek.beu2w2d4.entities.Author;
 import org.emmek.beu2w2d4.exceptions.BadRequestException;
 import org.emmek.beu2w2d4.exceptions.NotFoundException;
+import org.emmek.beu2w2d4.payloads.author.AuthorPostDTO;
 import org.emmek.beu2w2d4.repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,18 +13,30 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class AuthorService {
     @Autowired
     AuthorRepository authorRepository;
 
-
-    public Author save(Author author) {
-        authorRepository.findByEmail(author.getEmail()).ifPresent(a -> {
+    public Author save(AuthorPostDTO author) throws IOException {
+        authorRepository.findByEmail(author.email()).ifPresent(a -> {
             throw new BadRequestException("Author with email " + a.getEmail() + " already exists");
         });
-        author.setAvatar("http://ui-avatars.com/api/?name=" + author.getName() + "+" + author.getSurname());
-        return authorRepository.save(author);
+        Author newAuthor = new Author();
+        newAuthor.setAvatar("http://ui-avatars.com/api/?name=" + author.name() + "+" + author.surname());
+        newAuthor.setName(author.name());
+        newAuthor.setSurname(author.surname());
+        newAuthor.setEmail(author.email());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate date = LocalDate.parse(author.birthDate(), formatter);
+        newAuthor.setBirthDate(date);
+        Author savedAuthor = authorRepository.save(newAuthor);
+//        emailSender.sendRegistrationEmail(author.email());
+        return savedAuthor;
     }
 
     public Page<Author> getAuthors(int page, int size, String sort) {
